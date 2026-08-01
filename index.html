@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>La Ética a lo Largo de la Historia | Línea del Tiempo</title>
+<meta name="description" content="Línea del tiempo interactiva sobre la evolución del pensamiento ético desde la Edad Antigua hasta la Era Digital.">
+
+<style>
+  /* ============================================================
+     RESET Y VARIABLES GLOBALES
+     ============================================================ */
+  :root {
+    --bg-primary: #0a0e17;
+    --bg-secondary: #0f1420;
+    --bg-card: #131a2a;
+    --bg-card-hover: #182338;
+    --accent-cyan: #00f0ff;
+    --accent-cyan-dim: #00b8c4;
+    --accent-magenta: #ff2ec4;
+    --text-primary: #eaf2ff;
+    --text-secondary: #9fb0c9;
+    --text-muted: #62728c;
+    --border-color: #223049;
+    --shadow-glow: 0 0 20px rgba(0, 240, 255, 0.25);
+    --font-heading: 'Segoe UI', 'Trebuchet MS', system-ui, sans-serif;
+    --font-body: 'Segoe UI', Tahoma, sans-serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: radial-gradient(ellipse at top, #0e1626 0%, #0a0e17 60%);
+    color: var(--text-primary);
+    font-family: var(--font-body);
+    line-height: 1.6;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  ::selection { background: var(--accent-cyan); color: #061018; }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 10px; }
+  ::-webkit-scrollbar-track { background: var(--bg-primary); }
+  ::-webkit-scrollbar-thumb { background: var(--accent-cyan-dim); border-radius: 10px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--accent-cyan); }
+
+  /* ============================================================
+     HEADER / HERO
+     ============================================================ */
+  header {
+    position: relative;
+    text-align: center;
+    padding: 4.5rem 1.5rem 3rem;
+    background:
+      radial-gradient(circle at 20% 20%, rgba(0, 240, 255, 0.08), transparent 45%),
+      radial-gradient(circle at 80% 30%, rgba(255, 46, 196, 0.07), transparent 45%);
+    border-bottom: 1px solid var(--border-color);
+    overflow: hidden;
+  }
+
+  header::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0, 240, 255, 0.035) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0, 240, 255, 0.035) 1px, transparent 1px);
+    background-size: 42px 42px;
+    mask-image: radial-gradient(ellipse at center, black 40%, transparent 80%);
+    pointer-events: none;
+  }
+
+  header .eyebrow {
+    position: relative;
+    display: inline-block;
+    font-size: 0.8rem;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--accent-cyan);
+    margin-bottom: 1rem;
+    font-weight: 600;
+  }
+
+  header h1 {
+    position: relative;
+    font-family: var(--font-heading);
+    font-size: clamp(2rem, 5vw, 3.4rem);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    background: linear-gradient(120deg, #ffffff 30%, var(--accent-cyan) 65%, var(--accent-magenta) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    margin-bottom: 0.9rem;
+  }
+
+  header p.subtitle {
+    position: relative;
+    max-width: 680px;
+    margin: 0 auto;
+    color: var(--text-secondary);
+    font-size: clamp(0.95rem, 1.6vw, 1.1rem);
+  }
+
+  /* ============================================================
+     FILTROS
+     ============================================================ */
+  .filters {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.6rem;
+    padding: 1.1rem 1.5rem;
+    background: rgba(10, 14, 23, 0.85);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  .filter-btn {
+    position: relative;
+    padding: 0.55rem 1.2rem;
+    border-radius: 999px;
+    border: 1px solid var(--border-color);
+    background: var(--bg-card);
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    white-space: nowrap;
+  }
+
+  .filter-btn:hover {
+    color: var(--text-primary);
+    border-color: var(--accent-cyan-dim);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 14px rgba(0, 240, 255, 0.12);
+  }
+
+  .filter-btn.active {
+    background: linear-gradient(120deg, var(--accent-cyan), var(--accent-cyan-dim));
+    color: #061018;
+    border-color: var(--accent-cyan);
+    box-shadow: var(--shadow-glow);
+  }
+
+  .filter-btn .count {
+    display: inline-block;
+    margin-left: 0.4rem;
+    font-size: 0.72rem;
+    opacity: 0.75;
+  }
+
+  /* ============================================================
+     TIMELINE
+     ============================================================ */
+  main {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 3rem 1.5rem 5rem;
+  }
+
+  .timeline {
+    position: relative;
+  }
+
+  .timeline::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: linear-gradient(180deg, transparent, var(--accent-cyan-dim) 5%, var(--accent-cyan-dim) 95%, transparent);
+    transform: translateX(-50%);
+    opacity: 0.4;
+  }
+
+  .timeline-item {
+    position: relative;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 2.4rem;
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    transition: opacity 0.45s ease, transform 0.45s ease, max-height 0.45s ease, margin 0.45s ease;
+  }
+
+  .timeline-item.hidden {
+    opacity: 0;
+    transform: translateY(18px) scale(0.96);
+    max-height: 0;
+    margin: 0;
+    pointer-events: none;
+    position: absolute;
+    visibility: hidden;
+  }
+
+  .timeline-item:nth-child(odd) .card-wrap { margin-right: auto; }
+  .timeline-item:nth-child(even) .card-wrap { margin-left: auto; }
+
+  .card-wrap {
+    position: relative;
+    width: calc(50% - 3rem);
+  }
+
+  .node {
+    position: absolute;
+    top: 1.8rem;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--bg-primary);
+    border: 3px solid var(--accent-cyan);
+    box-shadow: 0 0 0 4px rgba(0, 240, 255, 0.12), 0 0 14px rgba(0, 240, 255, 0.5);
+    z-index: 2;
+  }
+
+  .timeline-item:nth-child(odd) .node { right: -3.55rem; }
+  .timeline-item:nth-child(even) .node { left: -3.55rem; }
+
+  /* Card */
+  .card {
+    background: linear-gradient(165deg, var(--bg-card), var(--bg-secondary));
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    overflow: hidden;
+    transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.35s ease, border-color 0.35s ease;
+    cursor: default;
+  }
+
+  .card:hover {
+    transform: translateY(-6px);
+    border-color: var(--accent-cyan-dim);
+    box-shadow: 0 14px 34px rgba(0, 0, 0, 0.45), 0 0 24px rgba(0, 240, 255, 0.15);
+  }
+
+  .card-img {
+    position: relative;
+    width: 100%;
+    height: 190px;
+    overflow: hidden;
+    background: #0c1220;
+  }
+
+  .card-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.6s ease, filter 0.6s ease;
+    filter: saturate(0.85) brightness(0.9);
+  }
+
+  .card:hover .card-img img {
+    transform: scale(1.08);
+    filter: saturate(1) brightness(1);
+  }
+
+  .card-img::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, transparent 40%, rgba(10, 14, 23, 0.85) 100%);
+  }
+
+  .era-tag {
+    position: absolute;
+    top: 0.8rem;
+    left: 0.8rem;
+    z-index: 3;
+    padding: 0.28rem 0.7rem;
+    border-radius: 999px;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    background: rgba(6, 16, 24, 0.75);
+    backdrop-filter: blur(6px);
+    border: 1px solid rgba(0, 240, 255, 0.4);
+    color: var(--accent-cyan);
+  }
+
+  .card-body { padding: 1.3rem 1.4rem 1.5rem; }
+
+  .date {
+    display: inline-block;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--accent-magenta);
+    letter-spacing: 0.04em;
+    margin-bottom: 0.35rem;
+  }
+
+  .card-body h2 {
+    font-family: var(--font-heading);
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 0.3rem;
+    line-height: 1.3;
+  }
+
+  .thinker {
+    font-size: 0.85rem;
+    color: var(--accent-cyan);
+    font-weight: 600;
+    margin-bottom: 0.8rem;
+  }
+
+  .context {
+    font-size: 0.88rem;
+    color: var(--text-secondary);
+    margin-bottom: 0.9rem;
+  }
+
+  .idea-box {
+    background: rgba(0, 240, 255, 0.05);
+    border-left: 3px solid var(--accent-cyan);
+    border-radius: 6px;
+    padding: 0.7rem 0.9rem;
+    font-size: 0.85rem;
+    color: var(--text-primary);
+  }
+
+  .idea-box strong {
+    display: block;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--accent-cyan);
+    margin-bottom: 0.25rem;
+  }
+
+  /* Empty state */
+  .empty-state {
+    display: none;
+    text-align: center;
+    padding: 4rem 1rem;
+    color: var(--text-muted);
+  }
+  .empty-state.show { display: block; }
+
+  /* ============================================================
+     BIBLIOGRAFÍA
+     ============================================================ */
+  .bibliography {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1.5rem 4rem;
+  }
+
+  .bibliography h2 {
+    font-family: var(--font-heading);
+    font-size: clamp(1.4rem, 3vw, 1.9rem);
+    font-weight: 800;
+    text-align: center;
+    margin-bottom: 0.5rem;
+    background: linear-gradient(120deg, #ffffff 30%, var(--accent-cyan) 65%, var(--accent-magenta) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .bibliography .bib-subtitle {
+    text-align: center;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    max-width: 620px;
+    margin: 0 auto 2rem;
+  }
+
+  .bib-list {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 0.9rem;
+    counter-reset: bib-counter;
+  }
+
+  .bib-list li {
+    counter-increment: bib-counter;
+    position: relative;
+    background: linear-gradient(165deg, var(--bg-card), var(--bg-secondary));
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 1rem 1.1rem 1rem 3rem;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    transition: border-color 0.3s ease, transform 0.3s ease;
+  }
+
+  .bib-list li:hover {
+    border-color: var(--accent-cyan-dim);
+    transform: translateY(-3px);
+  }
+
+  .bib-list li::before {
+    content: counter(bib-counter);
+    position: absolute;
+    left: 0.9rem;
+    top: 1rem;
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 50%;
+    background: rgba(0, 240, 255, 0.08);
+    border: 1px solid var(--accent-cyan-dim);
+    color: var(--accent-cyan);
+    font-size: 0.72rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .bib-list li a {
+    color: var(--text-primary);
+    text-decoration: none;
+    font-weight: 600;
+    border-bottom: 1px dashed var(--accent-cyan-dim);
+  }
+
+  .bib-list li a:hover {
+    color: var(--accent-cyan);
+  }
+
+  /* ============================================================
+     FOOTER
+     ============================================================ */
+  footer {
+    text-align: center;
+    padding: 2.2rem 1.5rem;
+    border-top: 1px solid var(--border-color);
+    color: var(--text-muted);
+    font-size: 0.82rem;
+  }
+
+  footer span { color: var(--accent-cyan); }
+
+  /* ============================================================
+     BACK TO TOP
+     ============================================================ */
+  #backToTop {
+    position: fixed;
+    bottom: 1.6rem;
+    right: 1.6rem;
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    border: 1px solid var(--accent-cyan-dim);
+    background: var(--bg-card);
+    color: var(--accent-cyan);
+    font-size: 1.2rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px);
+    transition: all 0.3s ease;
+    z-index: 60;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+  }
+  #backToTop.show { opacity: 1; visibility: visible; transform: translateY(0); }
+  #backToTop:hover { background: var(--accent-cyan); color: #061018; box-shadow: var(--shadow-glow); }
+
+  /* ============================================================
+     RESPONSIVE
+     ============================================================ */
+  @media (max-width: 860px) {
+    .timeline::before { left: 22px; }
+    .timeline-item:nth-child(odd) .card-wrap,
+    .timeline-item:nth-child(even) .card-wrap {
+      width: 100%;
+      margin-left: 3.2rem;
+      margin-right: 0;
+    }
+    .timeline-item:nth-child(odd) .node,
+    .timeline-item:nth-child(even) .node {
+      left: 15px;
+      right: auto;
+    }
+  }
+
+  @media (max-width: 500px) {
+    header { padding: 3.2rem 1rem 2.2rem; }
+    .filters { gap: 0.4rem; padding: 0.9rem 0.8rem; }
+    .filter-btn { padding: 0.48rem 0.9rem; font-size: 0.78rem; }
+    main { padding: 2rem 0.9rem 3.5rem; }
+    .card-body { padding: 1.1rem 1.1rem 1.3rem; }
+    .card-body h2 { font-size: 1.1rem; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <span class="eyebrow">Historia del pensamiento moral</span>
+  <h1>La Ética a lo Largo de la Historia</h1>
+  <p class="subtitle">
+    Un recorrido por 20 hitos fundamentales que forjaron la reflexión moral de la humanidad,
+    desde los primeros códigos legales de la Antigüedad hasta los desafíos éticos de la Inteligencia Artificial.
+  </p>
+</header>
+
+<nav class="filters" id="filters">
+  <button class="filter-btn active" data-filter="todos">Todos</button>
+  <button class="filter-btn" data-filter="antigua">Edad Antigua</button>
+  <button class="filter-btn" data-filter="media">Edad Media</button>
+  <button class="filter-btn" data-filter="moderna">Edad Moderna</button>
+  <button class="filter-btn" data-filter="contemporanea">Edad Contemporánea</button>
+  <button class="filter-btn" data-filter="digital">Siglo XXI / Era Digital</button>
+</nav>
+
+<main>
+  <div class="timeline" id="timeline"></div>
+  <div class="empty-state" id="emptyState">
+    <p>No hay hitos para esta categoría.</p>
+  </div>
+</main>
+
+<section class="bibliography" id="bibliografia">
+  <h2>Bibliografía</h2>
+  <p class="bib-subtitle">Fuentes consultadas para la elaboración de esta línea del tiempo sobre la historia del pensamiento ético.</p>
+  <ol class="bib-list">
+    <li>Aristóteles. <a href="https://es.wikipedia.org/wiki/Ética_nicomáquea" target="_blank" rel="noopener noreferrer"><em>Ética a Nicómaco</em></a>. Traducción de Julio Pallí Bonet. Gredos, 1985.</li>
+    <li>Platón. <a href="https://es.wikipedia.org/wiki/Apología_de_Sócrates" target="_blank" rel="noopener noreferrer"><em>Diálogos</em></a> (Apología de Sócrates, Critón). Gredos, 1981.</li>
+    <li>Confucio. <a href="https://es.wikipedia.org/wiki/Analectas_de_Confucio" target="_blank" rel="noopener noreferrer"><em>Analectas</em></a>. Traducción de Anne-Hélène Suárez. Kairós, 1997.</li>
+    <li><a href="https://es.wikipedia.org/wiki/Epicuro_de_Samos" target="_blank" rel="noopener noreferrer">Epicuro</a>. <em>Obras completas</em>. Traducción de José Vara. Cátedra, 1995.</li>
+    <li>Séneca, L. A. <a href="https://es.wikipedia.org/wiki/De_la_brevedad_de_la_vida" target="_blank" rel="noopener noreferrer"><em>Sobre la brevedad de la vida</em></a> y otros diálogos. Alianza Editorial, 2000.</li>
+    <li>San Agustín de Hipona. <a href="https://es.wikipedia.org/wiki/Confesiones" target="_blank" rel="noopener noreferrer"><em>Confesiones</em></a>. Traducción de Pedro Rodríguez de Santidrián. Alianza Editorial, 2008.</li>
+    <li><a href="https://es.wikipedia.org/wiki/Ibn_Rushd" target="_blank" rel="noopener noreferrer">Averroes</a>. <em>Exposición de la República de Platón</em>. Traducción de Miguel Cruz Hernández. Tecnos, 1986.</li>
+    <li>Maimónides. <a href="https://es.wikipedia.org/wiki/Guía_de_los_Perplejos" target="_blank" rel="noopener noreferrer"><em>Guía de Perplejos</em></a>. Traducción de David Gonzalo Maeso. Trotta, 2008.</li>
+    <li>Tomás de Aquino. <a href="https://es.wikipedia.org/wiki/Suma_teológica" target="_blank" rel="noopener noreferrer"><em>Suma de Teología</em></a>. Biblioteca de Autores Cristianos, 2001.</li>
+    <li>Maquiavelo, N. <a href="https://es.wikipedia.org/wiki/El_príncipe" target="_blank" rel="noopener noreferrer"><em>El Príncipe</em></a>. Traducción de Helena Puigdomènech. Alianza Editorial, 2011.</li>
+    <li>Hobbes, T. <a href="https://es.wikipedia.org/wiki/Leviatán_(Thomas_Hobbes)" target="_blank" rel="noopener noreferrer"><em>Leviatán</em></a>. Traducción de Carlos Mellizo. Alianza Editorial, 2003.</li>
+    <li>Kant, I. <a href="https://es.wikipedia.org/wiki/Fundamentación_de_la_metafísica_de_las_costumbres" target="_blank" rel="noopener noreferrer"><em>Fundamentación de la metafísica de las costumbres</em></a>. Traducción de Manuel García Morente. Tecnos, 2005.</li>
+    <li>Bentham, J. <a href="https://es.wikipedia.org/wiki/Introducción_a_los_principios_de_la_moral_y_la_legislación" target="_blank" rel="noopener noreferrer"><em>Introducción a los principios de la moral y la legislación</em></a>. Fondo de Cultura Económica, 2008.</li>
+    <li>Mill, J. S. <a href="https://es.wikipedia.org/wiki/Sobre_la_libertad" target="_blank" rel="noopener noreferrer"><em>Sobre la libertad</em></a> y <a href="https://es.wikipedia.org/wiki/El_utilitarismo" target="_blank" rel="noopener noreferrer"><em>El utilitarismo</em></a>. Alianza Editorial, 2013.</li>
+    <li>Marx, K. y Engels, F. <a href="https://es.wikipedia.org/wiki/Manifiesto_del_Partido_Comunista" target="_blank" rel="noopener noreferrer"><em>El Manifiesto Comunista</em></a>. Traducción de Manuel Sacristán. Alianza Editorial, 2018.</li>
+    <li>Nietzsche, F. <a href="https://es.wikipedia.org/wiki/Más_allá_del_bien_y_del_mal" target="_blank" rel="noopener noreferrer"><em>Más allá del bien y del mal</em></a>. Traducción de Andrés Sánchez Pascual. Alianza Editorial, 2012.</li>
+    <li>Tribunal Militar Internacional de Núremberg. <a href="https://es.wikipedia.org/wiki/Código_de_Núremberg" target="_blank" rel="noopener noreferrer"><em>Código de Núremberg</em></a>, 1947.</li>
+    <li>Rawls, J. <a href="https://es.wikipedia.org/wiki/Teoría_de_la_justicia_(libro)" target="_blank" rel="noopener noreferrer"><em>Teoría de la justicia</em></a>. Traducción de María Dolores González. Fondo de Cultura Económica, 2006.</li>
+    <li>Floridi, L. y Cowls, J. <a href="https://doi.org/10.1162/99608f92.8cd550d1" target="_blank" rel="noopener noreferrer">"A Unified Framework of Five Principles for AI in Society"</a>. <em>Harvard Data Science Review</em>, 2019.</li>
+    <li>UNESCO. <a href="https://unesdoc.unesco.org/ark:/48223/pf0000381137" target="_blank" rel="noopener noreferrer"><em>Recomendación sobre la Ética de la Inteligencia Artificial</em></a>, 2021.</li>
+  </ol>
+</section>
+
+<footer>
+  Laboratorio 1 - Ética profesional - <span>Fredy Funes</span>
+</footer>
+
+<button id="backToTop" title="Volver arriba" aria-label="Volver arriba">&#8593;</button>
+
+<script>
+  /* ============================================================
+     DATOS: 20 HITOS DE LA HISTORIA DE LA ÉTICA
+     ============================================================ */
+  const milestones = [
+    {
+      date: "c. 1750 a.C.",
+      title: "Código de Hammurabi",
+      thinker: "Hammurabi — Babilonia",
+      era: "antigua",
+      eraLabel: "Edad Antigua",
+      context: "Uno de los primeros conjuntos de leyes escritas de la humanidad, tallado en una estela de piedra en el Imperio babilónico.",
+      idea: "Establece el principio de justicia retributiva ('ojo por ojo'), sentando las bases de la relación entre ley, castigo y proporcionalidad moral.",
+      img: "https://picsum.photos/id/1011/800/500"
+    },
+    {
+      date: "Siglo VI a.C.",
+      title: "El Confucianismo",
+      thinker: "Confucio — China",
+      era: "antigua",
+      eraLabel: "Edad Antigua",
+      context: "En medio de la fragmentación política de la China antigua, Confucio desarrolla un sistema ético basado en las relaciones sociales.",
+      idea: "Propone el 'Ren' (benevolencia) y la regla de reciprocidad: no hagas a otros lo que no quieres para ti, fundamento de la ética relacional.",
+      img: "https://picsum.photos/id/1015/800/500"
+    },
+    {
+      date: "469-399 a.C.",
+      title: "El Método Socrático",
+      thinker: "Sócrates — Grecia",
+      era: "antigua",
+      eraLabel: "Edad Antigua",
+      context: "En la Atenas clásica, Sócrates cuestiona las convenciones morales mediante el diálogo público, lo que finalmente le costará la vida.",
+      idea: "'Una vida sin examen no merece la pena ser vivida'. Introduce la ética como búsqueda racional de la virtud a través del autoconocimiento.",
+      img: "https://picsum.photos/id/1025/800/500"
+    },
+    {
+      date: "384-322 a.C.",
+      title: "Ética a Nicómaco",
+      thinker: "Aristóteles — Grecia",
+      era: "antigua",
+      eraLabel: "Edad Antigua",
+      context: "Discípulo de Platón y fundador del Liceo, Aristóteles sistematiza el estudio de la virtud como disciplina filosófica.",
+      idea: "La ética de la virtud: la felicidad (eudaimonía) se alcanza mediante el 'justo medio' y el hábito de actuar virtuosamente.",
+      img: "https://picsum.photos/id/1039/800/500"
+    },
+    {
+      date: "341-270 a.C.",
+      title: "El Hedonismo Racional",
+      thinker: "Epicuro — Grecia",
+      era: "antigua",
+      eraLabel: "Edad Antigua",
+      context: "Fundador del Jardín de Atenas, una comunidad filosófica que buscaba la tranquilidad frente a la incertidumbre del mundo helenístico.",
+      idea: "El placer moderado y la ausencia de dolor (ataraxia) son el fin último de una vida ética, alcanzado mediante la prudencia.",
+      img: "https://picsum.photos/id/1043/800/500"
+    },
+    {
+      date: "c. 300 a.C.",
+      title: "Nace el Estoicismo",
+      thinker: "Zenón de Citio — Grecia",
+      era: "antigua",
+      eraLabel: "Edad Antigua",
+      context: "Zenón funda una escuela en la Stoa Poikile de Atenas que luego influiría profundamente en Roma (Séneca, Epicteto, Marco Aurelio).",
+      idea: "La virtud consiste en vivir conforme a la razón y la naturaleza, aceptando lo que no depende de nosotros con serenidad (apatheia).",
+      img: "https://picsum.photos/id/1048/800/500"
+    },
+    {
+      date: "354-430 d.C.",
+      title: "Ética Cristiana Agustiniana",
+      thinker: "San Agustín de Hipona",
+      era: "media",
+      eraLabel: "Edad Media",
+      context: "Tras su conversión al cristianismo, Agustín reinterpreta la filosofía clásica a la luz de la fe en el ocaso del Imperio Romano.",
+      idea: "El bien y el mal moral dependen de la voluntad orientada hacia Dios; introduce el concepto de libre albedrío y pecado como elección moral.",
+      img: "https://picsum.photos/id/1053/800/500"
+    },
+    {
+      date: "Siglo XII",
+      title: "Ética y Razón en el Islam",
+      thinker: "Averroes (Ibn Rushd) — Al-Ándalus",
+      era: "media",
+      eraLabel: "Edad Media",
+      context: "En la Córdoba islámica, Averroes comenta y preserva la obra aristotélica, sirviendo de puente entre el pensamiento griego y Europa.",
+      idea: "Defiende la compatibilidad entre razón filosófica y fe religiosa como caminos complementarios hacia la verdad moral.",
+      img: "https://picsum.photos/id/1060/800/500"
+    },
+    {
+      date: "1138-1204",
+      title: "Ética Judía Racionalista",
+      thinker: "Maimónides — Córdoba/El Cairo",
+      era: "media",
+      eraLabel: "Edad Media",
+      context: "Médico y filósofo judío que sistematiza la ley y la ética hebrea integrando la lógica aristotélica en su 'Guía de Perplejos'.",
+      idea: "Propone el 'justo medio' entre extremos y la responsabilidad individual (tzedaká) como pilares de una vida moralmente recta.",
+      img: "https://picsum.photos/id/106/800/500"
+    },
+    {
+      date: "1225-1274",
+      title: "Ley Natural Tomista",
+      thinker: "Santo Tomás de Aquino",
+      era: "media",
+      eraLabel: "Edad Media",
+      context: "En la Europa escolástica, Tomás de Aquino sintetiza el pensamiento aristotélico con la teología cristiana en la 'Summa Theologiae'.",
+      idea: "Formula la teoría de la Ley Natural: la razón humana puede descubrir principios morales universales inscritos en el orden divino.",
+      img: "https://picsum.photos/id/1074/800/500"
+    },
+    {
+      date: "1532",
+      title: "El Realismo Político",
+      thinker: "Nicolás Maquiavelo",
+      era: "moderna",
+      eraLabel: "Edad Moderna",
+      context: "Publicada póstumamente, 'El Príncipe' surge de la observación directa de la política italiana renacentista, marcada por la inestabilidad.",
+      idea: "Separa la ética de la política: el fin justifica los medios cuando se trata de mantener el poder y la estabilidad del Estado.",
+      img: "https://picsum.photos/id/1084/800/500"
+    },
+    {
+      date: "1651",
+      title: "El Contrato Social",
+      thinker: "Thomas Hobbes",
+      era: "moderna",
+      eraLabel: "Edad Moderna",
+      context: "Escrito en medio de la Guerra Civil inglesa, 'Leviatán' propone una teoría del Estado para superar el caos del 'estado de naturaleza'.",
+      idea: "Los individuos ceden libertades a una autoridad soberana mediante un pacto racional para garantizar la paz y la supervivencia mutua.",
+      img: "https://picsum.photos/id/110/800/500"
+    },
+    {
+      date: "1785",
+      title: "El Imperativo Categórico",
+      thinker: "Immanuel Kant",
+      era: "moderna",
+      eraLabel: "Edad Moderna",
+      context: "En la Ilustración alemana, Kant busca fundamentar la moral en la razón pura, independiente de la religión o las consecuencias.",
+      idea: "'Obra solo según una máxima que puedas querer que se convierta en ley universal'. Nace la ética deontológica del deber.",
+      img: "https://picsum.photos/id/1025/801/500"
+    },
+    {
+      date: "1789",
+      title: "Nace el Utilitarismo",
+      thinker: "Jeremy Bentham",
+      era: "moderna",
+      eraLabel: "Edad Moderna",
+      context: "En la Inglaterra industrial, Bentham propone reformar la ley y la moral con un criterio cuantificable y racional.",
+      idea: "El 'principio de utilidad': una acción es moralmente correcta si maximiza la felicidad para el mayor número de personas.",
+      img: "https://picsum.photos/id/1082/800/500"
+    },
+    {
+      date: "1861",
+      title: "Utilitarismo y Libertad",
+      thinker: "John Stuart Mill",
+      era: "moderna",
+      eraLabel: "Edad Moderna",
+      context: "Mill refina el utilitarismo de Bentham e introduce la defensa de la libertad individual en 'Sobre la Libertad' (1859).",
+      idea: "Distingue placeres 'superiores' e 'inferiores' y defiende que la libertad individual es esencial para el bienestar colectivo.",
+      img: "https://picsum.photos/id/1069/800/500"
+    },
+    {
+      date: "1848",
+      title: "Ética y Materialismo Histórico",
+      thinker: "Karl Marx",
+      era: "contemporanea",
+      eraLabel: "Edad Contemporánea",
+      context: "En plena Revolución Industrial, Marx analiza la explotación del proletariado bajo el capitalismo emergente.",
+      idea: "Critica la moral burguesa como ideología de clase y plantea que la verdadera ética exige la emancipación económica y social.",
+      img: "https://picsum.photos/id/1080/800/500"
+    },
+    {
+      date: "1883-1888",
+      title: "Más Allá del Bien y del Mal",
+      thinker: "Friedrich Nietzsche",
+      era: "contemporanea",
+      eraLabel: "Edad Contemporánea",
+      context: "En un contexto de crisis de los valores tradicionales europeos, Nietzsche cuestiona radicalmente la moral heredada del cristianismo.",
+      idea: "Propone la 'transmutación de los valores' y la idea del Übermensch, criticando la moral de 'rebaño' en favor de la autocreación individual.",
+      img: "https://picsum.photos/id/1004/800/500"
+    },
+    {
+      date: "1947",
+      title: "Ética Médica y Derechos Humanos",
+      thinker: "Código de Núremberg",
+      era: "contemporanea",
+      eraLabel: "Edad Contemporánea",
+      context: "Tras los juicios de Núremberg por los crímenes nazis, la comunidad internacional establece límites éticos a la experimentación humana.",
+      idea: "Nace el principio del consentimiento informado, pilar de la bioética moderna y de la protección universal de la dignidad humana.",
+      img: "https://picsum.photos/id/1073/800/500"
+    },
+    {
+      date: "1971",
+      title: "Teoría de la Justicia",
+      thinker: "John Rawls",
+      era: "contemporanea",
+      eraLabel: "Edad Contemporánea",
+      context: "En la posguerra estadounidense, Rawls busca reconciliar libertad e igualdad en una teoría contractualista renovada.",
+      idea: "Propone el 'velo de la ignorancia': las normas justas son aquellas que aceptaríamos sin saber qué posición social ocuparemos.",
+      img: "https://picsum.photos/id/1076/800/500"
+    },
+    {
+      date: "2018 — Actualidad",
+      title: "Ética de la Inteligencia Artificial",
+      thinker: "Comunidad científica global",
+      era: "digital",
+      eraLabel: "Siglo XXI / Era Digital",
+      context: "Con el auge del big data, el aprendizaje automático y regulaciones como el RGPD, surgen nuevos dilemas morales sin precedentes históricos.",
+      idea: "Se debaten principios de transparencia, equidad algorítmica, privacidad y responsabilidad ante decisiones automatizadas que afectan a millones de personas.",
+      img: "https://picsum.photos/id/0/800/500"
+    }
+  ];
+
+  /* ============================================================
+     RENDERIZADO DE LA LÍNEA DE TIEMPO
+     ============================================================ */
+  const timelineEl = document.getElementById('timeline');
+  const emptyStateEl = document.getElementById('emptyState');
+
+  function renderTimeline(items) {
+    timelineEl.innerHTML = items.map((m, i) => `
+      <article class="timeline-item" data-era="${m.era}" style="transition-delay:${i * 0.02}s">
+        <span class="node"></span>
+        <div class="card-wrap">
+          <div class="card">
+            <div class="card-img">
+              <span class="era-tag">${m.eraLabel}</span>
+              <img src="${m.img}" alt="Imagen representativa: ${m.title}" loading="lazy">
+            </div>
+            <div class="card-body">
+              <span class="date">${m.date}</span>
+              <h2>${m.title}</h2>
+              <p class="thinker">${m.thinker}</p>
+              <p class="context">${m.context}</p>
+              <div class="idea-box">
+                <strong>Aporte ético principal</strong>
+                ${m.idea}
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+    `).join('');
+  }
+
+  /* ============================================================
+     SISTEMA DE FILTROS
+     ============================================================ */
+  const filterButtons = document.querySelectorAll('.filter-btn');
+
+  function applyFilter(filter) {
+    const items = document.querySelectorAll('.timeline-item');
+    let visibleCount = 0;
+
+    items.forEach(item => {
+      const matches = filter === 'todos' || item.dataset.era === filter;
+      item.classList.toggle('hidden', !matches);
+      if (matches) visibleCount++;
+    });
+
+    emptyStateEl.classList.toggle('show', visibleCount === 0);
+  }
+
+  filterButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      filterButtons.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      applyFilter(btn.dataset.filter);
+    });
+  });
+
+  /* ============================================================
+     BOTÓN VOLVER ARRIBA
+     ============================================================ */
+  const backToTopBtn = document.getElementById('backToTop');
+
+  window.addEventListener('scroll', () => {
+    backToTopBtn.classList.toggle('show', window.scrollY > 500);
+  });
+
+  backToTopBtn.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  /* ============================================================
+     ANIMACIÓN DE ENTRADA AL HACER SCROLL (Intersection Observer)
+     ============================================================ */
+  function initScrollReveal() {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.opacity = '1';
+          entry.target.style.transform = 'translateY(0) scale(1)';
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15 });
+
+    document.querySelectorAll('.timeline-item').forEach(item => {
+      item.style.opacity = '0';
+      item.style.transform = 'translateY(30px) scale(0.97)';
+      observer.observe(item);
+    });
+  }
+
+  /* ============================================================
+     INICIALIZACIÓN
+     ============================================================ */
+  document.addEventListener('DOMContentLoaded', () => {
+    renderTimeline(milestones);
+    initScrollReveal();
+  });
+</script>
+
+</body>
+</html>
